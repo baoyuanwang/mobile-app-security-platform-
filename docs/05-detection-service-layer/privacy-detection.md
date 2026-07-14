@@ -476,11 +476,47 @@ Security Operation Platform 根据结果：
 
 ---
 
-# 10. Summary
+# 10. Key Technologies
+
+| 技术领域 | 关键技术 | 说明 |
+|----------|---------|------|
+| 静态污点分析 | Soot + Taint Analysis | 基于中间表示的静态数据流追踪 |
+| 动态污点追踪 | Frida + Dynamic Taint | 运行时数据流追踪，覆盖反射和动态加载 |
+| 数据流分析 | Data Flow Analysis / Call Graph | 敏感数据从采集到传输的全链路分析 |
+| 隐私策略引擎 | Rule Engine / Policy Evaluation | 合规策略规则执行，支持 GDPR/PIPL/CCPA |
+| API 监控 | Frida Hook / Xposed | 敏感 API 调用拦截与参数采集 |
+| 网络流量分析 | Mitmproxy / Certificate Pinning Bypass | HTTPS 流量解密与敏感数据外传检测 |
+| 权限分析 | Manifest Analysis / Runtime Permission Check | 声明权限与实际使用的差异分析 |
+| SDK 行为分析 | SDK Fingerprinting + Behavior Profiling | 第三方 SDK 数据采集行为识别 |
+| NLP 语义分析 | BERT / Text Classification | 隐私政策文本与实际行为一致性分析 |
+| AI 辅助 | LLM / Few-shot Learning | 复杂隐私场景判断、风险解释生成 |
+
+---
+
+# 11. Technical Metrics
+
+| 指标 | 目标值 | 说明 |
+|------|--------|------|
+| 敏感数据访问识别率 | ≥ 95% | 敏感 API 调用与数据访问的识别覆盖度 |
+| 数据流追踪覆盖率 | ≥ 90% | 敏感数据从采集到传输的全链路追踪 |
+| 隐私违规检出率 | ≥ 90% | 隐私违规行为的识别准确度 |
+| 隐私检测误报率 | ≤ 1% | 正常行为被误判为违规的比例 |
+| SDK 隐私风险识别率 | ≥ 85% | 第三方 SDK 隐私风险识别覆盖 |
+| 隐私政策一致性检测率 | ≥ 80% | 隐私声明与实际行为的差异检出 |
+| 权限超范围使用检出率 | ≥ 90% | 超出业务必要范围的权限使用检出 |
+| 检测延迟 | ≤ 30 min | 单应用隐私检测端到端延迟 |
+
+---
+
+# 12. Summary
 
 Privacy Detection 是移动应用安全检测平台的重要业务检测能力。
 
 它基于 Analysis Engine Layer 提供的数据访问、程序行为和运行证据，结合隐私规则、数据分类知识和 AI 能力，对应用的数据处理行为进行安全与合规判断。
+
+关键技术涵盖静态污点分析（Soot）、动态污点追踪（Frida）、隐私策略引擎、网络流量分析（Mitmproxy）、SDK 行为分析和 NLP 语义分析等。
+
+技术指标从敏感数据识别、数据流追踪、违规检出、误报控制等维度定义了能力基线，确保平台具备全面、准确、高效的隐私合规检测能力。
 
 Privacy Detection 关注：
 

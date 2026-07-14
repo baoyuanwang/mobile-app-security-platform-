@@ -514,16 +514,95 @@ Application Detection
 
 ---
 
-# 9. Chapter Navigation
+# 9. Key Technology Map
+
+平台各层关键技术体系总览。
+
+## 9.1 检测能力链关键技术
+
+| Layer | 关键技术 | 核心工具 |
+|-------|---------|---------|
+| Infrastructure | 设备虚拟化 | QEMU/KVM, Android Emulator, Redroid |
+| Infrastructure | 设备管控 | STF, ADB, Scrcpy |
+| Infrastructure | 网络隔离 | Network Namespace, TC, Mitmproxy |
+| Infrastructure | 环境快照 | QEMU Snapshot, Docker Checkpoint |
+| Infrastructure | 运行时注入 | Frida, Xposed, Magisk |
+| Analysis Engine | APK 解包 | Apktool, AAPT2 |
+| Analysis Engine | 反编译 | JADX, JEB, Ghidra |
+| Analysis Engine | 程序分析 | Soot, WALA, Jimple IR |
+| Analysis Engine | 数据流分析 | Taint Analysis, Data Flow Analysis |
+| Analysis Engine | 代码相似性 | SSDeep, TLSH, SimHash, BinDiff |
+| Analysis Engine | 运行时监控 | Frida, Strace, System Call Tracing |
+| Analysis Engine | 网络分析 | Mitmproxy, tcpdump, PCAP |
+| Analysis Engine | AI 分析 | CNN, LSTM, GNN, Transformer |
+| Detection Service | 特征匹配 | YARA, ClamAV |
+| Detection Service | 恶意分类 | CNN, LSTM, XGBoost, GNN |
+| Detection Service | 污点追踪 | Static/Dynamic Taint Tracking |
+| Detection Service | 隐私策略 | Rule Engine, Policy Evaluation |
+| Detection Service | NLP | BERT, Text Classification, NER |
+| Detection Service | 图像识别 | ResNet, EfficientNet, YOLO, OCR |
+| Detection Service | 感知哈希 | pHash, dHash, SIFT, Siamese Network |
+| Application Access | API 网关 | Kong, APISIX |
+| Application Access | 工作流引擎 | Camunda, Temporal |
+| Application Access | 消息队列 | Kafka, RabbitMQ |
+
+## 9.2 横向平台关键技术
+
+| Platform | 关键技术 | 核心工具 |
+|----------|---------|---------|
+| Big Data | 流式计算 | Flink, Spark Streaming |
+| Big Data | 离线计算 | Spark, Hive |
+| Big Data | 交互式查询 | ClickHouse, Doris |
+| Big Data | 图数据库 | Neo4j, JanusGraph |
+| Big Data | 搜索引擎 | Elasticsearch |
+| Big Data | 可视化 | Grafana, Kibana |
+| Operation | 规则引擎 | Drools, Easy Rules |
+| Operation | AI 辅助 | LLM, RAG |
+| Operation | 风险评分 | XGBoost, LightGBM |
+| Intelligence | 样本管理 | MinIO, HDFS |
+| Intelligence | IOC 管理 | MISP, STIX 2.1 |
+| Intelligence | 知识图谱 | Neo4j, JanusGraph, NebulaGraph |
+| Intelligence | 模型管理 | MLflow, PyTorch, TensorFlow |
+| Intelligence | 向量检索 | Milvus, FAISS |
+
+---
+
+# 10. Technical Metrics Overview
+
+平台核心能力指标总览。
+
+| 指标类别 | 核心指标 | 目标值 |
+|----------|---------|--------|
+| 恶意软件检测 | 已知检出率 | ≥ 99.5% |
+| 恶意软件检测 | 未知检出率 | ≥ 85% |
+| 恶意软件检测 | 误报率 | ≤ 0.1% |
+| 隐私合规检测 | 违规检出率 | ≥ 90% |
+| 涉诈风险检测 | 识别率 | ≥ 85% |
+| 广告行为检测 | 违规检出率 | ≥ 90% |
+| 内容安全检测 | 违规识别率 | ≥ 90% |
+| 仿冒侵权检测 | 识别率 | ≥ 90% |
+| SDK 风险检测 | 检出率 | ≥ 85% |
+| 静态分析 | 单应用分析时间 | ≤ 3 min |
+| 动态分析 | 单应用分析时间 | ≤ 15 min |
+| 端到端检测 | 延迟 | ≤ 30 min |
+| 日检测吞吐量 | | ≥ 5,000 apps/day |
+| 平台可用性 | | ≥ 99.9% |
+| 样本库规模 | | ≥ 10M |
+| 检测特征数 | | ≥ 500K |
+| IOC 指标数 | | ≥ 1M |
+
+---
+
+# 11. Chapter Navigation
 
 后续章节将在本章架构基础上，分别展开各能力模块的详细设计。
 
-- Chapter 03 Infrastructure Layer
-- Chapter 04 Analysis Engine Layer
-- Chapter 05 Detection Service Layer
-- Chapter 06 Application Access Layer
-- Chapter 07 Security Big Data Platform
-- Chapter 08 Security Operation Platform
-- Chapter 09 Security Intelligence & Knowledge Platform
+- Chapter 03 Execution Environment Layer — 执行环境资源管理
+- Chapter 04 Analysis Engine Layer — 静态分析与动态分析
+- Chapter 05 Detection Service Layer — 七大检测服务
+- Chapter 06 Application Access Layer — 能力开放与业务集成
+- Chapter 07 Security Big Data Platform — 安全数据汇聚与分析
+- Chapter 08 Security Operation Platform — 安全运营闭环
+- Chapter 09 Security Intelligence & Knowledge Platform — 知识沉淀与能力演进
 
 本章定义的架构边界、模块职责和数据流，为整份技术地图的统一技术基线。

@@ -379,11 +379,47 @@ Dynamic Analysis 遵循以下原则。
 
 ---
 
-# 9. Summary
+# 9. Key Technologies
+
+| 技术领域 | 关键技术 | 说明 |
+|----------|---------|------|
+| 运行时插桩 | Frida / Xposed / LSPosed | 方法 Hook、参数捕获、返回值追踪 |
+| 系统调用监控 | Strace / Seccomp-BPF | 系统调用级行为监控 |
+| 网络流量采集 | Mitmproxy / tcpdump / PCAP | HTTPS 中间人代理、流量采集、协议解析 |
+| 文件系统监控 | Inotify / Auditd | 文件创建/修改/删除实时监控 |
+| 进程监控 | /proc / Process Monitor | 进程创建、信号、内存映射 |
+| UI 自动化 | UIAutomator / Appium / Accessibility | 自动化 UI 操作与界面遍历 |
+| 行为序列建模 | LSTM / Transformer / Markov Chain | 运行行为序列化与模式学习 |
+| 内存分析 | Memory Dump / Forensics | 运行时内存快照与敏感数据检测 |
+| 证书绕过 | SSL Unpinning / Certificate Bypass | HTTPS 证书校验绕过以捕获加密流量 |
+| Root 检测绕过 | Root Hide / Magisk Hide | 绕过应用的 Root 检测逻辑 |
+
+---
+
+# 10. Technical Metrics
+
+| 指标 | 目标值 | 说明 |
+|------|--------|------|
+| 单应用动态分析时间 | ≤ 15 min | 含安装、运行、采集的完整动态分析耗时 |
+| 并发执行能力 | ≥ 50 instances | 同时运行的应用实例数 |
+| 行为采集覆盖率 | ≥ 90% | 关键行为采集覆盖度 |
+| 网络流量捕获率 | ≥ 95% | HTTPS/TLS 流量解密捕获比例 |
+| UI 自动化覆盖率 | ≥ 70% | 主要界面和功能路径的自动遍历覆盖 |
+| 场景触发成功率 | ≥ 85% | 预定义分析场景的成功触发比例 |
+| 行为重建准确率 | ≥ 90% | 运行事件转换为行为描述的准确度 |
+| 动态证据完整率 | ≥ 85% | 可提取的动态证据完整度 |
+
+---
+
+# 11. Summary
 
 Dynamic Analysis 是移动应用安全检测平台理解应用运行行为的重要能力。
 
 它通过在受控执行环境中运行应用，采集运行时数据，并将底层运行事件转换为可理解的行为信息，最终输出标准化动态分析结果。
+
+关键技术涵盖运行时插桩（Frida/Xposed）、系统调用监控（Strace）、网络流量采集（Mitmproxy）、UI 自动化（UIAutomator/Appium）和行为序列建模（LSTM/Transformer）等。
+
+技术指标从分析性能、行为采集覆盖和证据质量等维度定义了能力基线，确保动态分析具备高效、全面、可信的运行行为理解能力。
 
 Dynamic Analysis 与 Static Analysis 共同构成 Analysis Engine Layer 的程序理解能力，为 Detection Service Layer 提供全面的分析基础。
 

@@ -338,8 +338,39 @@ Device Farm 与 Sandbox 共同作为执行资源提供者，由 Execution Enviro
 
 ---
 
-# 12. Summary
+# 12. Key Technologies
+
+| 技术领域 | 关键技术 | 说明 |
+|----------|---------|------|
+| 设备连接 | ADB over TCP / USB | 设备通信与远程控制 |
+| 设备集群 | STF (Smartphone Test Farm) | 设备注册、远程操控、屏幕投射 |
+| 屏幕采集 | Scrcpy / Minicap | 低延迟屏幕投射与截图 |
+| 设备监控 | ADB shell / 自研 Agent | CPU/内存/温度/电池状态采集 |
+| 设备恢复 | Factory Reset / ADB clear | 应用数据清理与系统状态恢复 |
+| 网络管理 | Wi-Fi AP / USB Tethering | 设备网络接入与流量控制 |
+| 远程安装 | ADB install / pm install | 应用包远程安装 |
+
+---
+
+# 13. Technical Metrics
+
+| 指标 | 目标值 | 说明 |
+|------|--------|------|
+| 设备在线率 | ≥ 98% | 真机设备在线可用时间占比 |
+| 设备分配延迟 | ≤ 30 sec | 从请求到设备就绪的等待时间 |
+| 设备恢复时间 | ≤ 5 min | 清理数据并恢复到可用状态 |
+| 设备利用率 | ≥ 80% | 真机设备资源利用效率 |
+| 并发设备支持 | ≥ 200 台 | 同时在线管理的设备数量 |
+| 设备故障恢复时间 | ≤ 10 min | 异常设备检测和恢复时间 |
+| 设备品牌覆盖 | ≥ 10 个 | Google、Samsung、Xiaomi 等 |
+| Android 版本覆盖 | Android 10-15 | 覆盖市场主流版本 |
+
+---
+
+# 14. Summary
 
 Device Farm 是平台真实设备资源的统一管理中心。
 
-它通过标准化的设备模型、统一的资源调度接口和持续健康监控，为 Analysis Engine 提供稳定、可靠的真实设备执行环境，同时与 Sandbox 共同构成平台执行资源体系的重要组成部分。
+关键技术涵盖设备集群管理（STF）、远程控制（ADB/Scrcpy）、设备监控和快速恢复等。
+
+技术指标从设备可用性、分配效率、利用率和覆盖度等维度定义了能力基线，确保 Device Farm 为 Analysis Engine 提供稳定、可靠的真实设备执行环境，同时与 Sandbox 共同构成平台执行资源体系的重要组成部分。

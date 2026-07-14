@@ -310,10 +310,39 @@ Execution Environment Management 是 Execution Environment Layer 的统一管理
 
 ---
 
-# 11. Summary
+# 11. Key Technologies
+
+| 技术领域 | 关键技术 | 说明 |
+|----------|---------|------|
+| 资源注册 | Service Registry (Consul/Eureka) | 执行环境自动注册与发现 |
+| 资源调度 | 自研调度器 / Kubernetes Scheduler | 基于约束的执行环境智能调度 |
+| 资源分配 | 分布式锁 (Redis/ZooKeeper) | 资源独占分配与并发控制 |
+| 健康监控 | Health Check / Heartbeat | 执行环境状态持续监控与异常检测 |
+| 元数据管理 | etcd / MongoDB | 环境元数据存储与查询 |
+| 负载均衡 | Round Robin / Weighted / Least Loaded | 多种调度策略支持 |
+
+---
+
+# 12. Technical Metrics
+
+| 指标 | 目标值 | 说明 |
+|------|--------|------|
+| 环境分配延迟 | ≤ 30 sec | 从请求到环境就绪的等待时间 |
+| 资源调度成功率 | ≥ 99% | 环境分配请求的成功率 |
+| 资源健康检测周期 | ≤ 30 sec | 健康检查间隔 |
+| 故障检测延迟 | ≤ 60 sec | 从环境异常到检测发现的时间 |
+| 故障恢复时间 | ≤ 5 min | 环境异常后恢复时间 |
+| 调度公平性 | ≥ 95% | 资源分配的公平性指数 |
+| 系统可用率 | ≥ 99.9% | 管理服务可用时间占比 |
+
+---
+
+# 13. Summary
 
 Execution Environment Management 是 Execution Environment Layer 的资源管理中心。
 
-它通过统一的资源注册、调度、分配、监控和生命周期管理，实现真实设备与虚拟执行环境的统一管理，为 Analysis Engine 提供稳定、高效、可扩展的执行环境服务。
+关键技术涵盖服务注册（Consul/Eureka）、智能调度、分布式锁（Redis/ZooKeeper）和健康监控等。
+
+技术指标从分配效率、调度可靠性、故障恢复和系统可用性等维度定义了能力基线，确保 Execution Environment Management 通过统一的资源注册、调度、分配、监控和生命周期管理，实现真实设备与虚拟执行环境的统一管理，为 Analysis Engine 提供稳定、高效、可扩展的执行环境服务。
 
 Execution Environment Management 不承担程序分析职责，也不负责应用执行控制，而是作为执行环境资源的统一控制平面，支撑整个移动应用安全检测平台的运行。

@@ -228,35 +228,161 @@
 
 ---
 
-# 8. 文档组织
+# 8. 关键技术体系
+
+平台涉及的核心关键技术按层级组织如下。
+
+## 8.1 执行环境层关键技术
+
+| 技术领域 | 关键技术 | 说明 |
+|----------|---------|------|
+| 设备虚拟化 | Android Emulator / QEMU-based Virtualization | 基于硬件辅助虚拟化（KVM/HAXM）的 Android 运行环境构建 |
+| 容器化执行 | Android Container（Anbox / Redroid） | 基于 Linux 容器技术的轻量级 Android 运行环境 |
+| 设备集群管理 | STF（Smartphone Test Farm）/ 自研设备管控 | 真机设备统一注册、远程控制、批量调度 |
+| 网络模拟 | Network Namespace / TC（Traffic Control） | 网络隔离、延迟注入、丢包模拟、DNS 劫持模拟 |
+| 环境快照 | VM Snapshot / Container Checkpoint | 执行环境状态保存与秒级恢复 |
+| 远程控制 | ADB over TCP / Scrcpy / Minicap | 设备远程操控与屏幕流采集 |
+| Hook 框架 | Frida / Xposed / LSPosed | 运行时方法拦截与行为监控注入 |
+
+## 8.2 分析引擎层关键技术
+
+| 技术领域 | 关键技术 | 说明 |
+|----------|---------|------|
+| 反编译 | JADX / Apktool / JEB / Ghidra | DEX 反编译、资源解包、Native 反汇编 |
+| 程序表示 | Soot / WALA / Smali IR | 统一中间表示（IR）构建，支撑数据流与控制流分析 |
+| 数据流分析 | Taint Analysis / Data Flow Analysis | 污点追踪、数据流传播分析，识别敏感数据流向 |
+| 控制流分析 | CFG / Call Graph / ICC Analysis | 控制流图、调用图、组件间通信分析 |
+| 代码相似性 | SSDeep / TLSH / SimHash / BinDiff | 恶意代码家族聚类、同源分析、重打包检测 |
+| 机器学习 | CNN / LSTM / GNN / Transformer | 恶意应用分类、行为序列建模、图神经网络分析 |
+| 运行时监控 | Frida Instrumentation / System Call Tracing | API Hook、系统调用采集、JNI 调用监控 |
+| 网络分析 | Mitmproxy / tcpdump / PCAP Analysis | 中间人代理、流量采集、协议解析 |
+| 行为建模 | Sequence Modeling / Behavior Graph | 运行行为序列化、行为图构建、行为模式挖掘 |
+| 加固对抗 | Deobfuscation / Unpacking / Deobfuscator | 代码反混淆、加壳脱壳、字符串解密 |
+
+## 8.3 检测服务层关键技术
+
+| 技术领域 | 关键技术 | 说明 |
+|----------|---------|------|
+| 恶意软件检测 | YARA / ClamAV / ML Classifier | 特征匹配、启发式检测、机器学习分类 |
+| 恶意家族识别 | Clustering / Phylogenetic Analysis | 恶意软件家族聚类、进化关系分析 |
+| 隐私合规检测 | Taint Tracking + Policy Engine | 污点追踪结合隐私策略引擎的合规判断 |
+| 数据流分析 | Static Taint Analysis / Dynamic Taint Tracking | 静态污点传播 + 动态污点追踪，覆盖数据全生命周期 |
+| 涉诈风险检测 | Risk Scoring / Graph Analysis / NLP | 风险评分模型、关联图谱分析、文本语义分析 |
+| 广告行为检测 | UI State Machine / Ad SDK Fingerprinting | 界面状态机建模、广告 SDK 指纹识别与行为判定 |
+| 内容安全检测 | NLP / OCR / Multi-modal Classification | 文本分类、图像识别、多模态内容合规判断 |
+| 仿冒侵权检测 | Perceptual Hash / Feature Matching / SIPI | 感知哈希、特征匹配、图标/名称相似度计算 |
+| SDK 风险检测 | SDK Fingerprinting / Behavior Profiling | SDK 指纹提取、行为画像建模、供应链风险分析 |
+| AI 辅助分析 | LLM / RAG / Few-shot Learning | 大语言模型辅助研判、检索增强生成、小样本学习 |
+
+## 8.4 横向平台关键技术
+
+| 技术领域 | 关键技术 | 说明 |
+|----------|---------|------|
+| 大数据采集 | Kafka / Flume / Logstash | 多源异构数据实时采集与传输 |
+| 数据治理 | Data Quality / Metadata Management / Data Lineage | 数据质量管控、元数据管理、数据血缘追踪 |
+| 安全态势感知 | OLAP / Time Series Analysis / Anomaly Detection | 多维分析、时序异常检测、态势可视化 |
+| 知识图谱 | Neo4j / JanusGraph / Property Graph | 实体关系建模、图查询、关联分析 |
+| IOC 管理 | MISP / OpenIOC / STIX/TAXII | 威胁情报标准化、指标共享、关联分析 |
+| AI 模型管理 | MLflow / Model Registry / A/B Testing | 模型版本管理、效果评估、灰度发布 |
+| 自动化分析 | Workflow Engine / Decision Tree / Auto-Response | 自动分析编排、决策树、自动化响应 |
+
+---
+
+# 9. 技术指标体系
+
+平台技术指标按能力维度组织，作为平台建设与演进的能力基线。
+
+## 9.1 检测能力指标
+
+| 指标类别 | 指标名称 | 目标值 | 说明 |
+|----------|---------|--------|------|
+| 恶意软件检测 | 已知恶意软件检出率 | ≥ 99.5% | 基于样本库的已知家族检出能力 |
+| 恶意软件检测 | 未知恶意软件检出率 | ≥ 85% | 零日/变异样本的启发式检出能力 |
+| 恶意软件检测 | 误报率 | ≤ 0.1% | 正常应用被误判为恶意的比例 |
+| 恶意软件检测 | 家族识别准确率 | ≥ 95% | 恶意软件家族分类准确度 |
+| 隐私合规检测 | 敏感数据访问识别率 | ≥ 95% | 敏感 API 调用与数据访问的识别覆盖度 |
+| 隐私合规检测 | 数据流追踪覆盖率 | ≥ 90% | 敏感数据从采集到传输的全链路追踪覆盖 |
+| 隐私合规检测 | 违规行为检出率 | ≥ 90% | 隐私违规行为的识别准确度 |
+| 涉诈风险检测 | 涉诈应用识别率 | ≥ 85% | 诈骗类应用的识别准确度 |
+| 涉诈风险检测 | 误报率 | ≤ 1% | 正常应用被误判为涉诈的比例 |
+| 广告行为检测 | 违规广告行为检出率 | ≥ 90% | 违规广告行为的识别覆盖度 |
+| 广告行为检测 | 广告 SDK 识别覆盖率 | ≥ 95% | 主流广告 SDK 的指纹识别覆盖 |
+| 内容安全检测 | 违规内容识别率 | ≥ 90% | 违规文本/图像内容识别准确度 |
+| 仿冒侵权检测 | 仿冒应用识别率 | ≥ 90% | 图标/名称/包名仿冒识别准确度 |
+| SDK 风险检测 | SDK 识别覆盖率 | ≥ 95% | 主流 SDK 的指纹识别覆盖度 |
+| SDK 风险检测 | SDK 风险行为检出率 | ≥ 85% | SDK 恶意/违规行为识别准确度 |
+
+## 9.2 性能指标
+
+| 指标类别 | 指标名称 | 目标值 | 说明 |
+|----------|---------|--------|------|
+| 静态分析 | 单应用分析时间 | ≤ 3 min | 标准 APK 静态全量分析耗时 |
+| 静态分析 | 批量吞吐量 | ≥ 200 apps/hour | 静态分析并发处理能力 |
+| 动态分析 | 单应用分析时间 | ≤ 15 min | 含安装、运行、采集的完整动态分析耗时 |
+| 动态分析 | 并发执行能力 | ≥ 50 instances | 同时运行的应用实例数 |
+| 检测服务 | 端到端检测延迟 | ≤ 30 min | 从应用提交到检测报告输出的总耗时 |
+| 检测服务 | 日检测吞吐量 | ≥ 5,000 apps/day | 平台日处理应用数量 |
+| 执行环境 | 环境分配延迟 | ≤ 30 sec | 从请求到环境就绪的等待时间 |
+| 执行环境 | 环境恢复时间 | ≤ 60 sec | Sandbox 快照恢复耗时 |
+| 执行环境 | 设备利用率 | ≥ 80% | 真机设备资源利用率 |
+
+## 9.3 可靠性指标
+
+| 指标类别 | 指标名称 | 目标值 | 说明 |
+|----------|---------|--------|------|
+| 平台可用性 | 系统可用率 | ≥ 99.9% | 平台年度可用时间占比 |
+| 平台可用性 | 检测任务成功率 | ≥ 99.5% | 检测任务正常完成率 |
+| 数据可靠性 | 分析结果持久化率 | 100% | 分析结果不丢失 |
+| 数据可靠性 | 检测结果可追溯率 | 100% | 所有检测结果可回溯至原始证据 |
+| 环境可靠性 | 环境故障恢复时间 | ≤ 5 min | 执行环境异常后恢复时间 |
+
+## 9.4 知识演进指标
+
+| 指标类别 | 指标名称 | 目标值 | 说明 |
+|----------|---------|--------|------|
+| 样本库 | 恶意样本覆盖量 | ≥ 10M | 平台积累的恶意应用样本数量 |
+| 特征库 | 检测特征数量 | ≥ 500K | 可用检测特征/规则数量 |
+| IOC 库 | IOC 指标数量 | ≥ 1M | 威胁指标（C2、Hash、Domain 等）数量 |
+| 知识图谱 | 实体关系数量 | ≥ 50M | 知识图谱中的实体关系对数量 |
+| AI 模型 | 模型迭代周期 | ≤ 2 weeks | 检测模型更新迭代周期 |
+| 规则更新 | 规则生效延迟 | ≤ 24 hours | 新规则从发布到检测生效的时间 |
+
+---
+
+# 10. 文档组织
 
 本文档按照能力分层和能力平台组织。
 
 整体包括：
 
-- Overall Architecture Design
-- Infrastructure Layer
-- Analysis Engine Layer
-- Detection Service Layer
-- Application Access Layer
-- Security Big Data Platform
-- Security Operation Platform
-- Security Intelligence & Knowledge Platform
+- Chapter 01 Overview（平台概述、关键技术、技术指标）
+- Chapter 02 Overall Architecture Design（总体架构设计）
+- Chapter 03 Execution Environment Layer（执行环境层）
+- Chapter 04 Analysis Engine Layer（分析引擎层）
+- Chapter 05 Detection Service Layer（检测服务层）
+- Chapter 06 Application Access Layer（应用接入层）
+- Chapter 07 Security Big Data Platform（安全大数据平台）
+- Chapter 08 Security Operation Platform（安全运营平台）
+- Chapter 09 Security Intelligence & Knowledge Platform（安全智能与知识平台）
 
 各章节相互独立、职责清晰，共同构成完整的移动应用安全检测与生态风险治理平台技术体系。
 
 ---
 
-# 9. 阅读建议
+# 11. 阅读建议
 
 本文档既可作为平台整体架构设计参考，也可作为各能力模块的详细技术设计指南。
 
 建议按照以下顺序阅读：
 
-1. Overview
-2. Overall Architecture Design
-3. Detection Capability Layers
-4. Horizontal Capability Platforms
-5. 各子模块详细设计
+1. Overview — 理解平台定位、关键技术体系和技术指标
+2. Overall Architecture Design — 理解整体分层架构和数据流
+3. Execution Environment Layer — 理解执行资源基础设施
+4. Analysis Engine Layer — 理解静态分析与动态分析能力
+5. Detection Service Layer — 理解各检测业务能力
+6. Application Access Layer — 理解能力开放与业务集成
+7. Security Big Data Platform — 理解数据汇聚与态势感知
+8. Security Operation Platform — 理解安全运营闭环
+9. Security Intelligence & Knowledge Platform — 理解知识沉淀与能力演进
 
 随着平台能力不断演进，本文档将持续维护和更新，作为平台统一的技术基线和能力蓝图。

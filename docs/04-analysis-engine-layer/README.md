@@ -302,10 +302,97 @@ Analysis Engine 与 Execution Environment、Detection Service 解耦。
 
 ---
 
-# 10. Summary
+# 10. Key Technologies
+
+Analysis Engine Layer 涉及的关键技术如下。
+
+## 10.1 静态分析关键技术
+
+| 技术领域 | 关键技术 | 说明 |
+|----------|---------|------|
+| APK 解包 | Apktool / AAPT2 | 资源解包、Manifest 解析、DEX 提取 |
+| DEX 反编译 | JADX / JEB / Procyon | Dalvik 字节码反编译为 Java 源码 |
+| Native 反汇编 | Ghidra / IDA Pro / Capstone | SO 文件反汇编、ARM/x86 指令分析 |
+| 中间表示构建 | Soot / Jimple / Smali IR | 统一中间表示，支撑后续数据流与控制流分析 |
+| 控制流分析 | CFG Construction / Call Graph | 控制流图构建、方法调用图构建 |
+| 数据流分析 | Taint Analysis / Data Flow Analysis | 污点传播分析、数据依赖分析 |
+| 组件间通信分析 | ICC Analyzer / Intent Analysis | Activity/Service/Receiver/Provider 间通信路径分析 |
+| 代码相似性分析 | SSDeep / TLSH / SimHash / BinDiff | 恶意代码同源分析、重打包检测、家族聚类 |
+| 字符串提取 | String Extraction / Deobfuscation | 加密字符串解密、混淆字符串还原 |
+| 加固对抗 | DEX Dump / Memory Dump / Static Unpacking | 加壳应用脱壳、DEX 内存dump、静态拆包 |
+| SDK 识别 | SDK Fingerprinting / Library Identification | 第三方 SDK 指纹提取与版本识别 |
+
+## 10.2 动态分析关键技术
+
+| 技术领域 | 关键技术 | 说明 |
+|----------|---------|------|
+| 运行时插桩 | Frida / Xposed / LSPosed | 运行时方法 Hook、参数捕获、返回值追踪 |
+| 系统调用监控 | Strace / Seccomp-BPF | 系统调用级行为监控，覆盖文件/网络/进程操作 |
+| 网络流量采集 | Mitmproxy / tcpdump / Pcap | HTTPS 中间人代理、流量采集、协议解析 |
+| 文件系统监控 | Inotify / Auditd | 文件创建/修改/删除实时监控 |
+| 进程行为监控 | /proc 文件系统 / Process Monitor | 进程创建、信号、内存映射监控 |
+| UI 自动化 | UIAutomator / Appium / Accessibility | 自动化 UI 操作、界面遍历、场景触发 |
+| 行为序列建模 | LSTM / Transformer / Markov Chain | 运行行为序列化、行为模式学习 |
+| 内存分析 | Memory Dump / Memory Forensics | 运行时内存快照、敏感数据内存泄露检测 |
+
+## 10.3 分析结果管理关键技术
+
+| 技术领域 | 关键技术 | 说明 |
+|----------|---------|------|
+| 数据标准化 | JSON Schema / Protocol Buffers | 统一分析结果数据模型与序列化 |
+| 证据关联 | Graph Database / Entity Resolution | 静态证据与动态证据的关联分析 |
+| 结果存储 | Elasticsearch / MongoDB / Object Storage | 分析结果持久化、全文检索、对象存储 |
+| 结果查询 | GraphQL / REST API | 统一分析结果查询接口 |
+
+---
+
+# 11. Technical Metrics
+
+Analysis Engine Layer 的关键技术指标如下。
+
+## 11.1 静态分析指标
+
+| 指标 | 目标值 | 说明 |
+|------|--------|------|
+| 单应用静态分析时间 | ≤ 3 min | 标准 APK（≤ 100MB）全量静态分析耗时 |
+| 批量吞吐量 | ≥ 200 apps/hour | 并发静态分析处理能力 |
+| APK 解包成功率 | ≥ 99.9% | 标准及加固 APK 的解包成功率 |
+| 反编译覆盖率 | ≥ 95% | DEX 代码反编译为可读源码的比例 |
+| 控制流图构建率 | ≥ 90% | 可构建有效 CFG 的方法比例 |
+| 数据流追踪覆盖率 | ≥ 85% | 敏感 API 数据流可追踪到的比例 |
+| SDK 识别覆盖率 | ≥ 95% | 主流 SDK 的指纹识别覆盖度 |
+| 加固对抗成功率 | ≥ 80% | 主流加固方案（360、腾讯、梆梆等）的脱壳成功率 |
+
+## 11.2 动态分析指标
+
+| 指标 | 目标值 | 说明 |
+|------|--------|------|
+| 单应用动态分析时间 | ≤ 15 min | 含安装、运行、采集的完整动态分析耗时 |
+| 并发执行能力 | ≥ 50 instances | 同时运行的应用实例数 |
+| 行为采集覆盖率 | ≥ 90% | 关键行为（网络、文件、API）的采集覆盖度 |
+| 网络流量捕获率 | ≥ 95% | HTTPS/TLS 流量的解密捕获比例 |
+| UI 自动化覆盖率 | ≥ 70% | 主要界面和功能路径的自动遍历覆盖 |
+| 场景触发成功率 | ≥ 85% | 预定义分析场景的成功触发比例 |
+
+## 11.3 分析结果指标
+
+| 指标 | 目标值 | 说明 |
+|------|--------|------|
+| 结果标准化率 | 100% | 所有分析结果符合统一数据模型 |
+| 证据关联完整率 | ≥ 90% | 静态证据与动态证据可关联的比例 |
+| 结果查询延迟 | ≤ 500 ms | 分析结果查询响应时间 |
+| 结果持久化可靠性 | 100% | 分析结果不丢失 |
+
+---
+
+# 12. Summary
 
 Analysis Engine Layer 是移动应用安全检测平台的程序分析核心。
 
 它通过静态分析和动态分析两种方式，对移动应用进行全面的程序理解，并输出统一的分析结果，为 Detection Service Layer 提供可信、完整的分析数据。
+
+关键技术涵盖：静态分析侧的 APK 解包、DEX 反编译、中间表示构建、控制流/数据流分析、代码相似性分析、加固对抗；动态分析侧的运行时插桩（Frida）、系统调用监控、网络流量采集、UI 自动化、行为序列建模；以及分析结果管理侧的数据标准化、证据关联和结果持久化。
+
+技术指标从分析性能、覆盖率和可靠性三个维度定义了能力基线，确保平台具备高效、全面、可信的程序分析能力。
 
 Analysis Engine Layer 不负责安全风险判定，而是作为平台统一的分析能力中心，实现程序分析与业务检测解耦，为平台持续扩展新的分析能力和检测场景奠定基础。

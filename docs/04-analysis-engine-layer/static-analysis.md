@@ -311,10 +311,48 @@ Static Analysis 遵循以下设计原则。
 
 ---
 
-# 9. Summary
+# 9. Key Technologies
+
+| 技术领域 | 关键技术 | 说明 |
+|----------|---------|------|
+| APK 解包 | Apktool / AAPT2 | 资源解包、AndroidManifest.xml 解析、DEX 提取 |
+| DEX 反编译 | JADX / JEB / Procyon | Dalvik 字节码反编译为可读 Java 源码 |
+| Native 反汇编 | Ghidra / IDA Pro / Capstone | SO 文件反汇编、ARM/x86 指令集分析 |
+| 中间表示 | Soot / Jimple / Smali IR | 统一中间表示构建，支撑后续分析 |
+| 控制流分析 | CFG / Call Graph / ICC Analysis | 控制流图、调用图、组件间通信分析 |
+| 数据流分析 | Taint Analysis / Data Flow Analysis | 污点传播、数据依赖、变量定义-使用链 |
+| 代码相似性 | SSDeep / TLSH / SimHash / BinDiff | 代码/二进制相似性比较、同源分析 |
+| 字符串分析 | String Extraction / Deobfuscation | 加密字符串解密、混淆还原 |
+| 加固对抗 | DEX Dump / Static Unpacking / Memory Dump | 加壳应用脱壳、DEX 提取 |
+| SDK 识别 | SDK Fingerprinting / Maven Index | 第三方 SDK 指纹提取与版本识别 |
+| 证书分析 | Certificate Parsing / Signature Verification | 签名证书解析、开发者身份关联 |
+
+---
+
+# 10. Technical Metrics
+
+| 指标 | 目标值 | 说明 |
+|------|--------|------|
+| 单应用分析时间 | ≤ 3 min | 标准 APK（≤ 100MB）全量静态分析耗时 |
+| 批量吞吐量 | ≥ 200 apps/hour | 并发静态分析处理能力 |
+| APK 解包成功率 | ≥ 99.9% | 标准及加固 APK 的解包成功率 |
+| 反编译覆盖率 | ≥ 95% | DEX 代码反编译为可读源码的比例 |
+| 控制流图构建率 | ≥ 90% | 可构建有效 CFG 的方法比例 |
+| 数据流追踪覆盖率 | ≥ 85% | 敏感 API 数据流可追踪比例 |
+| SDK 识别覆盖率 | ≥ 95% | 主流 SDK 的指纹识别覆盖度 |
+| 加固对抗成功率 | ≥ 80% | 主流加固方案的脱壳成功率 |
+| 代码相似性计算延迟 | ≤ 30 sec | 单应用代码相似性比对耗时 |
+
+---
+
+# 11. Summary
 
 Static Analysis 是移动应用安全检测平台的重要分析能力。
 
 它通过对应用安装包进行程序结构分析、依赖分析、代码逻辑分析和静态证据提取，全面理解应用的静态特征，并输出标准化静态分析结果。
+
+关键技术涵盖 APK 解包（Apktool）、反编译（JADX/JEB）、中间表示（Soot/Jimple）、控制流/数据流分析、代码相似性（SSDeep/BinDiff）、加固对抗和 SDK 识别等。
+
+技术指标从分析性能、覆盖率和对抗能力等维度定义了能力基线，确保静态分析具备高效、全面、可靠的程序理解能力。
 
 这些分析结果既可独立支撑检测服务，也可与 Dynamic Analysis 协同工作，共同构建完整的程序分析能力，为 Detection Service Layer 提供可信的分析基础。
