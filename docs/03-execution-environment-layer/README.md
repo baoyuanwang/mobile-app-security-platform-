@@ -4,481 +4,360 @@
 
 # 1. Overview
 
-Execution Environment Layer（执行环境层）是移动应用安全检测平台的基础能力层。
+Execution Environment Layer（执行环境层）是移动应用安全检测平台的基础资源层。
 
-本层负责构建统一、可控、可观测、可重复的应用运行环境，为 Analysis Engine Layer 提供稳定、一致的程序执行基础。
+本层负责构建、管理和调度应用检测所需的执行环境，为 Analysis Engine Layer 提供统一、稳定、可扩展的运行资源。
 
-Execution Environment Layer 本身**不负责安全检测**，也**不负责风险判断**，而是负责让应用能够在不同环境中真实运行，并向上层提供统一的运行时数据采集能力。
+Execution Environment Layer 不负责程序分析，也不负责应用执行控制，而是作为整个检测平台的资源提供者（Resource Provider），统一管理真实设备、虚拟执行环境以及执行资源生命周期。
+
+所有程序分析能力均运行在 Execution Environment Layer 提供的执行环境之上。
 
 ---
 
 # 2. Design Objectives
 
-Execution Environment Layer 的建设目标包括：
+Execution Environment Layer 的设计目标包括：
 
-- 提供统一的应用执行环境；
-- 屏蔽不同设备和系统环境差异；
-- 支持静态分析前后的运行准备；
-- 支持动态分析、自动化测试和行为采集；
-- 提供统一的系统事件采集能力；
-- 提供统一的网络环境模拟能力；
-- 支持大规模并发检测。
+- 提供统一的应用执行资源；
+- 支持真实设备和虚拟环境统一管理；
+- 支持执行环境统一注册和调度；
+- 提供标准化环境管理接口；
+- 支持大规模并发检测任务；
+- 支持环境快速创建、恢复和回收；
+- 为 Analysis Engine 提供稳定、可重复的运行基础。
+
+Execution Environment Layer 关注的是**执行资源（Execution Resources）**，而不是**程序分析（Program Analysis）**。
 
 ---
 
-# 3. Architecture
+# 3. Position in Overall Architecture
 
-整体架构如下：
+Execution Environment Layer 位于整个检测能力链的底层。
 
 ```text
-                     Analysis Engine Layer
-                               ▲
-                               │
-               Runtime APIs / Events / Logs
-                               │
-──────────────────────────────────────────────────────────
-
-              Execution Environment Layer
-
-    ┌───────────────────────────────────────────────┐
-    │ Application Lifecycle Management              │
-    ├───────────────────────────────────────────────┤
-    │ Device Management                             │
-    ├───────────────────────────────────────────────┤
-    │ Runtime Environment Management                │
-    ├───────────────────────────────────────────────┤
-    │ Environment Simulation                        │
-    ├───────────────────────────────────────────────┤
-    │ Automation Runtime                            │
-    ├───────────────────────────────────────────────┤
-    │ Runtime Data Collection                       │
-    └───────────────────────────────────────────────┘
+┌──────────────────────────────────────────────┐
+│         Application Access Layer             │
+└──────────────────────────────────────────────┘
+                     ▲
+                     │
+┌──────────────────────────────────────────────┐
+│         Detection Service Layer              │
+└──────────────────────────────────────────────┘
+                     ▲
+                     │
+┌──────────────────────────────────────────────┐
+│         Analysis Engine Layer                │
+└──────────────────────────────────────────────┘
+                     ▲
+                     │
+┌──────────────────────────────────────────────┐
+│       Execution Environment Layer            │
+└──────────────────────────────────────────────┘
 ```
+
+Analysis Engine 负责分析应用程序。
+
+Execution Environment Layer 负责提供应用运行所需的执行资源。
+
+两层通过标准接口协同工作，实现资源管理与程序分析解耦。
 
 ---
 
 # 4. Core Responsibilities
 
-Execution Environment Layer 主要承担以下职责：
+Execution Environment Layer 主要承担以下职责。
 
-## 4.1 Environment Provisioning
+## 4.1 Execution Resource Management
 
-负责创建应用运行环境，包括：
+统一管理平台所有执行资源，包括：
 
-- Android 真机；
-- Android Emulator；
-- Sandbox；
-- Root Environment（可选）；
-- Multi-Version Android Runtime。
-
-平台能够根据检测任务自动选择适合的运行环境。
+- 真机设备；
+- 虚拟执行环境；
+- 环境资源池；
+- 执行实例。
 
 ---
 
-## 4.2 Environment Isolation
+## 4.2 Environment Scheduling
 
-不同检测任务之间相互隔离。
+根据检测任务需求自动选择合适的执行环境。
 
-每个任务拥有独立：
+例如：
 
-- 文件系统；
-- 应用安装空间；
-- 网络状态；
-- 系统配置；
-- 数据目录。
+- Android 版本；
+- Root 环境；
+- 真机；
+- 虚拟环境；
+- 指定设备型号。
 
-保证检测结果不会互相影响。
-
----
-
-## 4.3 Environment Reproducibility
-
-检测环境必须支持重复构建。
-
-同一个应用在相同配置下应能够获得一致的运行结果。
-
-支持：
-
-- Snapshot；
-- Environment Reset；
-- Template Image。
+Execution Environment Layer 不决定**执行什么**，仅决定**在哪里执行**。
 
 ---
 
-## 4.4 Runtime Observability
+## 4.3 Environment Lifecycle Management
 
-Execution Environment Layer 应持续采集应用运行过程中产生的系统事件。
+统一管理执行环境生命周期。
 
 包括：
 
-- Process Lifecycle；
-- Activity Lifecycle；
-- Service Lifecycle；
-- Broadcast；
-- File Events；
-- Network Events；
-- Binder Events；
-- Permission Usage。
+- 创建；
+- 注册；
+- 分配；
+- 回收；
+- 恢复；
+- 销毁。
 
-这些数据统一提供给 Analysis Engine Layer。
+管理对象为**执行环境**，而非应用生命周期。
 
 ---
 
-# 5. Functional Architecture
+## 4.4 Resource Monitoring
 
-Execution Environment Layer 由六个核心子模块组成。
+持续监控执行资源运行状态。
+
+包括：
+
+- 在线状态；
+- 健康状态；
+- CPU；
+- 内存；
+- 存储；
+- 网络；
+- 环境可用性。
+
+为资源调度提供依据。
+
+---
+
+# 5. Architecture
+
+Execution Environment Layer 包括三个核心模块。
 
 ```text
 Execution Environment Layer
 
-├── Application Lifecycle Management
-├── Device Management
-├── Runtime Environment Management
-├── Environment Simulation
-├── Automation Runtime
-└── Runtime Data Collection
+├── Device Farm
+├── Sandbox
+└── Execution Environment Management
 ```
 
----
+整体关系如下：
 
-# 6. Application Lifecycle Management
+```text
+                    Analysis Engine Layer
+                              ▲
+                              │
+                 Execution Environment APIs
+                              │
+          ┌───────────────────┴───────────────────┐
+          │                                       │
+┌────────────────────┐             ┌────────────────────────────┐
+│    Device Farm     │             │         Sandbox            │
+└────────────────────┘             └────────────────────────────┘
+          ▲                                       ▲
+          └───────────────────┬───────────────────┘
+                              │
+          ┌────────────────────────────────────────┐
+          │ Execution Environment Management       │
+          └────────────────────────────────────────┘
+```
 
-负责应用生命周期管理。
-
-包括：
-
-- Install
-- Upgrade
-- Launch
-- Background
-- Resume
-- Force Stop
-- Uninstall
-
-统一管理应用执行流程。
-
-提供标准生命周期接口。
-
----
-
-# 7. Device Management
-
-负责管理各种检测设备。
-
-支持：
-
-## Real Device
-
-真实 Android 设备。
-
-适用于：
-
-- Root 检测；
-- 系统兼容性；
-- ROM 差异分析。
+Execution Environment Management 统一管理所有执行资源，并向 Analysis Engine 提供标准化访问接口。
 
 ---
 
-## Emulator
+# 6. Core Modules
 
-Android Emulator。
+## 6.1 Device Farm
 
-适用于：
-
-- 批量检测；
-- 自动化执行；
-- 快速环境恢复。
-
----
-
-## Device Farm
-
-统一设备资源池。
+Device Farm 提供真实设备资源。
 
 负责：
 
-- 调度；
-- 分配；
-- 回收；
-- 健康检查。
+- 真机资源管理；
+- 设备注册；
+- 设备分配；
+- 设备回收；
+- 健康检查；
+- 在线监控。
+
+支持多种 Android 设备统一管理。
 
 ---
 
-# 8. Runtime Environment Management
+## 6.2 Sandbox
 
-负责维护应用运行所需的系统环境。
+Sandbox 提供虚拟执行环境。
 
-包括：
+负责：
 
-## Android Version
+- Android Emulator；
+- 虚拟设备；
+- 隔离运行环境；
+- 环境快照；
+- 环境恢复；
+- 环境克隆。
 
-支持多个 Android API Level。
-
-例如：
-
-- Android 10
-- Android 11
-- Android 12
-- Android 13
-- Android 14
+Sandbox 主要用于批量检测、自动化分析以及快速环境恢复。
 
 ---
 
-## System Configuration
+## 6.3 Execution Environment Management
 
-包括：
+Execution Environment Management 是 Execution Environment Layer 的管理中心。
 
-- Locale
-- Time Zone
-- Screen Resolution
-- Language
-- Accessibility
-- Developer Options
+负责统一管理所有执行资源。
 
----
+主要能力包括：
 
-## Runtime Configuration
+- 环境注册；
+- 资源调度；
+- 资源分配；
+- 环境状态管理；
+- 健康监控；
+- 环境恢复；
+- 环境元数据管理。
 
-包括：
-
-- Root 状态
-- SELinux
-- Debuggable
-- USB
-- Developer Mode
+Execution Environment Management 不直接运行应用，而是负责管理执行环境。
 
 ---
 
-# 9. Environment Simulation
+# 7. Interaction with Analysis Engine
 
-为了覆盖不同业务场景，需要支持丰富的环境模拟能力。
+Execution Environment Layer 与 Analysis Engine Layer 采用资源提供模式协作。
 
-包括：
+Analysis Engine 根据检测任务申请执行环境。
 
-## Network Simulation
+Execution Environment Layer 根据资源状态分配执行资源，并返回运行实例。
 
-支持：
+典型流程如下：
 
-- Wi-Fi
-- Cellular
-- Offline
-- Proxy
-- VPN
+```text
+Analysis Engine
 
-可模拟：
+        │
 
-- 网络延迟；
-- 丢包；
-- 限速；
-- DNS 劫持（测试环境）。
+        │ Request Execution Environment
 
----
+        ▼
 
-## Device Information Simulation
+Execution Environment Management
 
-模拟：
+        │
 
-- IMEI（测试）
-- Android ID
-- MAC Address（测试）
-- Manufacturer
-- Model
-- Screen Size
+        ├────────► Device Farm
 
-用于观察应用环境感知行为。
+        │
 
----
+        └────────► Sandbox
 
-## User State Simulation
+        │
 
-模拟：
+        ▼
 
-- 首次启动；
-- 已登录；
-- 新用户；
-- 老用户；
-- 多账号；
-- 权限已授权；
-- 权限未授权。
+Execution Handle
+
+        │
+
+        ▼
+
+Analysis Engine
+```
+
+Execution Environment Layer 不控制应用启动，也不控制应用执行，仅负责提供执行资源。
 
 ---
 
-## Location Simulation
+# 8. Design Principles
 
-支持：
+Execution Environment Layer 遵循以下设计原则。
 
-- GPS；
-- Mock Location；
-- 城市切换；
-- 国家切换。
+## Resource-Oriented
 
----
+所有能力围绕执行资源构建。
 
-## Time Simulation
-
-支持：
-
-- 系统时间调整；
-- 时区调整；
-- 日期跳变。
-
-用于检测时间敏感行为。
+不承担程序分析职责。
 
 ---
 
-# 10. Automation Runtime
+## Unified Management
 
-负责自动驱动应用运行。
+统一管理所有执行环境。
 
-支持：
-
-- UI 自动化；
-- 页面遍历；
-- 点击；
-- 输入；
-- 滑动；
-- 深链启动；
-- Intent 调用。
-
-Automation Runtime 不负责分析，只负责执行。
-
-Analysis Engine 基于执行结果进行分析。
+屏蔽不同设备和虚拟环境之间的差异。
 
 ---
 
-# 11. Runtime Data Collection
+## Loose Coupling
 
-负责统一采集运行时数据。
+与 Analysis Engine 解耦。
 
-包括：
-
-## System Events
-
-- Process
-- Activity
-- Service
-- Broadcast
+Analysis Engine 不关心底层资源实现方式。
 
 ---
 
-## File System
+## High Availability
 
-- Create
-- Read
-- Write
-- Delete
+支持执行环境健康检查、故障恢复和资源自动调度。
 
----
-
-## Network
-
-- Socket
-- HTTP
-- HTTPS
-- DNS
+保证平台持续稳定运行。
 
 ---
 
-## IPC
+## Scalability
 
-- Binder
-- ContentProvider
-- Broadcast
+支持执行资源横向扩展。
 
----
-
-## Permission Usage
-
-记录：
-
-- 权限申请；
-- 权限使用；
-- 敏感权限调用。
+能够根据检测规模动态增加设备和虚拟环境。
 
 ---
 
-## Application Logs
-
-包括：
-
-- Logcat；
-- ANR；
-- Crash；
-- Native Crash。
-
-所有运行数据统一进入 Analysis Engine。
-
----
-
-# 12. Design Principles
-
-Execution Environment Layer 遵循以下原则：
-
-## Environment First
-
-所有分析能力建立在统一运行环境之上。
-
----
-
-## Deterministic Execution
-
-同样环境、同样输入，应获得一致输出。
-
----
-
-## Isolation
-
-任务之间严格隔离。
-
----
-
-## High Scalability
-
-支持海量应用并发检测。
-
----
-
-## Extensibility
-
-支持新增：
-
-- Android 新版本；
-- 新设备；
-- 新环境；
-- 新模拟能力。
-
-无需影响上层 Analysis Engine。
-
----
-
-# 13. Inputs and Outputs
+# 9. Inputs and Outputs
 
 ## Input
 
-来自 Application Access Layer：
+来自 Analysis Engine Layer：
 
-- Detection Task；
-- Runtime Profile；
-- Environment Configuration。
+- Execution Request；
+- Environment Requirement；
+- Runtime Profile。
 
 ---
 
 ## Output
 
-向 Analysis Engine Layer 输出：
+返回：
 
-- Runtime Events；
-- Runtime Logs；
-- Application State；
-- Execution Context；
-- System Telemetry。
+- Execution Handle；
+- Device Instance；
+- Sandbox Instance；
+- Environment Metadata。
 
-Execution Environment Layer 不产生任何安全结论，仅负责提供真实、完整、可观测的应用运行环境。
+Execution Environment Layer 不输出程序分析结果，也不输出安全风险结论。
 
 ---
 
-# 14. Chapter Navigation
+# 10. Chapter Organization
 
-Execution Environment Layer 为整个检测平台提供统一的运行基础。
+本章节包括以下内容：
 
-下一章节将介绍 **Analysis Engine Layer**，说明平台如何基于执行环境对应用进行静态分析、动态分析和统一分析结果管理。
+```text
+03-execution-environment-layer/
+
+├── README.md
+├── device-farm.md
+├── sandbox.md
+└── execution-environment-management.md
+```
+
+三个模块共同构成统一的执行环境资源平台，为 Analysis Engine Layer 提供稳定、高效、可扩展的运行基础。
+
+---
+
+# 11. Summary
+
+Execution Environment Layer 是整个移动应用安全检测平台的执行资源基础。
+
+它通过 Device Farm、Sandbox 和 Execution Environment Management 三个核心模块，实现真实设备与虚拟执行环境的统一管理，为 Analysis Engine 提供标准化的执行资源。
+
+这种设计将资源管理与程序分析彻底解耦，使平台能够灵活扩展新的设备类型、执行环境和资源调度策略，为平台长期演进和大规模检测提供可靠支撑。
