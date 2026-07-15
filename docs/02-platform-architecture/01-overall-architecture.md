@@ -46,7 +46,7 @@
                                                    ▲
                                                    │
                                 +------------------------------------------------------+
-                                |          Layer 1  Infrastructure Layer               |
+                                |          Layer 1  Execution Environment Layer               |
                                 |------------------------------------------------------|
                                 | Device Farm | Sandbox | Emulator | Runtime Env       |
                                 +------------------------------------------------------+
@@ -156,7 +156,7 @@ Application
 
 ↓
 
-Infrastructure
+Execution Environment Layer
 
 ↓
 
@@ -177,19 +177,17 @@ Security Report
 
 ---
 
-## 4.1 Layer 1 Infrastructure Layer
+## 4.1 Layer 1 Execution Environment Layer
 
 ### Responsibilities
 
-负责提供统一检测运行环境。
+负责提供应用运行所需的执行资源。
 
 包括：
 
 - Device Farm
 - Sandbox
-- Emulator
-- Runtime Environment
-- Network Simulation
+- Execution Environment Management
 
 输出：
 
@@ -461,7 +459,7 @@ Detection Enhancement
 
 | Module | Responsibility | Output |
 |---------|----------------|--------|
-| Infrastructure | 提供检测运行环境 | Execution Environment |
+| Execution Environment Layer | 提供检测运行环境 | Execution Environment |
 | Analysis Engine | 程序分析与行为分析 | Analysis Result |
 | Detection Service | 安全风险判定 | Risk Decision |
 | Application Access | 能力开放与任务管理 | Detection Service |
