@@ -48,7 +48,7 @@
                                 +------------------------------------------------------+
                                 |          Layer 1  Execution Environment Layer               |
                                 |------------------------------------------------------|
-                                | Device Farm | Sandbox | Emulator | Runtime Env       |
+                                | Device Farm | Sandbox | Execution Environment Management|
                                 +------------------------------------------------------+
 
 
